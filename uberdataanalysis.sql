@@ -28,12 +28,6 @@ CREATE TABLE ubertable (
 	PRIMARY KEY (`bookingId`)
 );
 
-LOAD DATA LOCAL INFILE 'C:/Users/billy/OneDrive/Desktop/New Dataset/uberDataset/uberdata1.csv'
-INTO TABLE  ubertable
-FIELDS TERMINATED BY ','
-LINES TERMINATED BY '\n'
-IGNORE 1 LINES;
-
 -- DISCLAIMER:
 -- This analysis is conducted solely for educational and SQL practice purposes. The data used is fictional or
 -- anonymized and does not represent any real company, organization, or individual. Any insights or
@@ -41,6 +35,7 @@ IGNORE 1 LINES;
 
 -- REVENUE AND BOOKING PERFORMANCE ANALYSIS
 -- 1. What is the total booking revenue by month?
+
 SELECT
 	MONTH(date) AS monthNum,
     YEAR(date) AS year_,
@@ -54,6 +49,7 @@ GROUP BY
 ORDER BY monthNum;
 
 -- 2. Which vehicle types generate the highest revenue?
+
 SELECT
 	vehicleType,
     SUM(bookingValue) AS totalBookingRevenue
@@ -62,6 +58,7 @@ GROUP BY vehicleType
 ORDER BY totalBookingRevenue DESC;
 
 -- 3. What are the peak booking hours?
+
 SELECT
     HOUR(Time) AS bookingHour,
     COUNT(bookingId) AS totalBookings
@@ -70,6 +67,7 @@ GROUP BY bookingHour
 ORDER BY totalBookings DESC;
 
 -- 4. Which days have the highest ride demand?
+
 SELECT
 	DAYNAME(date) AS dayName,
     COUNT(bookingId) AS totalBookings
@@ -78,12 +76,14 @@ GROUP BY dayName
 ORDER BY totalBookings DESC;
 
 -- 5. What is the average booking value per ride?
+
 SELECT
 	ROUND(AVG(bookingValue),2) AS avgBookingValue
 FROM ubertable;
 
 -- CANCELLATION ANALYSIS
 -- 6. What is the overall cancellation rate?
+
 SELECT
     SUM(CASE WHEN bookingStatus LIKE 'Cancelled%' THEN 1 ELSE 0 END) AS totalCancelledRides,
     COUNT(*) AS total_bookings,
@@ -92,6 +92,7 @@ SELECT
 FROM uberTable;
 
 -- 7. Which pickup locations have the highest cancellation rates?
+
 SELECT
 	pickupLocation,
     SUM(CASE WHEN bookingStatus LIKE 'Cancelled%' THEN 1 ELSE 0 END) AS totalCancelledRides
@@ -101,6 +102,7 @@ ORDER BY totalCancelledRides DESC
 LIMIT 5;
 
 -- 8. What are the top reasons customers cancel rides?
+
 SELECT
 	reasonForCancellingByCustomer,
     SUM(CASE WHEN bookingStatus LIKE 'Cancelled%' THEN 1 ELSE 0 END) AS totalCancelledRides
@@ -109,6 +111,7 @@ GROUP BY reasonForCancellingByCustomer
 ORDER BY totalCancelledRides DESC;
 
 -- 9. What are the top reasons drivers cancel rides?
+
 SELECT
 	driverCancellationReason,
     SUM(CASE WHEN bookingStatus LIKE 'Cancelled%' THEN 1 ELSE 0 END) AS totalCancelledRides
@@ -118,6 +121,7 @@ ORDER BY totalCancelledRides DESC;
 
 
 -- 10. Which vehicle types experience the most cancellations?
+
 SELECT
 	vehicleType,
     SUM(CASE WHEN bookingStatus LIKE 'Cancelled%' THEN 1 ELSE 0 END) AS totalCancelledRides
@@ -127,6 +131,7 @@ ORDER BY totalCancelledRides DESC;
 
 -- DRIVER PERFORMANCE ANALYSIS
 -- 11. Which drivers/vehicle types receive the highest ratings?'
+
 SELECT
 	vehicleType,
     ROUND(AVG(driverRatings),2) AS totalRatings
@@ -135,6 +140,7 @@ GROUP BY vehicleType
 ORDER BY totalRatings DESC;
  
 -- 12. How do driver ratings affect booking completion?
+
 SELECT
     driverRatings,
     COUNT(bookingId) AS totalBookings,
@@ -152,6 +158,7 @@ GROUP BY driverRatings
 ORDER BY driverRatings DESC;
 
 -- 13. Which pickup locations have the best-rated drivers?
+
 SELECT
     pickupLocation,
     ROUND(AVG(driverRatings),2) AS averageDriverRating,
@@ -161,6 +168,7 @@ GROUP BY pickupLocation
 ORDER BY averageDriverRating DESC;
 
 -- 14. What is the average ride distance by vehicle type?
+
 SELECT
 	vehicleType,
     ROUND(AVG(rideDistance),2) AS avgDistance
@@ -170,6 +178,7 @@ ORDER BY avgDistance DESC;
 
 -- CUSTOMER BEHAVIOR ANALYSIS
 -- 15. Which payment methods are most frequently used?
+
 SELECT
 	paymentMethod,
 	COUNT(*) AS totalPaymentMethodUsed
@@ -178,6 +187,7 @@ GROUP BY paymentMethod
 ORDER BY totalPaymentMethodUsed DESC;
 
 -- 16. What percentage of rides are incomplete?
+
 SELECT
     SUM(incompleteRides) AS totalIncompleteRides,
     COUNT(*) AS totalBookings,
@@ -185,6 +195,7 @@ SELECT
 FROM uberTable;
 
 -- 17. What are the main reasons for incomplete rides?
+
 SELECT
     incompleteRidesReason,
     COUNT(*) AS totalIncompleteCases,
@@ -198,6 +209,7 @@ GROUP BY incompleteRidesReason
 ORDER BY totalIncompleteCases DESC;
 
 -- 18. Which pickup/drop locations experience the most incomplete rides?
+
 SELECT
     pickupLocation,
     dropLocation,
@@ -215,6 +227,7 @@ GROUP BY
 ORDER BY totalIncompleteRides DESC;
 
 -- 19. Which hours experience the highest incomplete ride frequency?
+
 SELECT
     HOUR(Time) AS bookingHour,
     COUNT(*) AS totalIncompleteRides,
@@ -228,6 +241,7 @@ GROUP BY bookingHour
 ORDER BY totalIncompleteRides DESC;
 
 -- 20. Which pickup locations generate the most revenue?
+
 SELECT
 	pickupLocation,
 	SUM(bookingValue) AS totalRevenue
@@ -237,6 +251,7 @@ ORDER BY totalRevenue DESC;
 
 
 -- 21. Which routes generate the highest booking value?
+
 SELECT
 	pickupLocation,
     COUNT(*) AS numberOfTraveled
@@ -245,6 +260,7 @@ GROUP BY pickupLocation
 ORDER BY numberOfTraveled DESC LIMIT 5;
 
 -- 22. Which areas have the longest average ride distance?
+
 SELECT
 	pickupLocation,
     dropLocation,
@@ -257,6 +273,7 @@ GROUP BY
 ORDER BY rideDistance DESC;
 
 -- 23. How do bookings change over time?
+
 SELECT
     YEAR(Date) AS bookingYear,
     MONTH(Date) AS bookingMonth,
@@ -270,6 +287,7 @@ ORDER BY
     bookingMonth;
     
 -- 24. What is the trend of cancellation rates over time?
+
 SELECT
     YEAR(`Date`) AS bookingyear,
     MONTH(`Date`) AS bookingmonth,
